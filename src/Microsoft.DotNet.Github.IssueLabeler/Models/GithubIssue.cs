@@ -25,7 +25,14 @@ namespace Microsoft.DotNet.GitHub.IssueLabeler
         public bool IsPR;
 
         [LoadColumn(4)]
-        public string FilePaths;
+        public string Filenames;
+
+        [LoadColumn(5)]
+        [ColumnName("PopularFolder")]
+        public string PopularFolders;
+
+        [LoadColumn(6)]
+        public string PossibleOwners;
 
         [NoColumn]
         public List<object> Labels { get; set; }

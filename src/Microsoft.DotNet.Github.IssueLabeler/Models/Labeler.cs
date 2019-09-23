@@ -4,6 +4,7 @@
 
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.KeyVault.Models;
+using Microsoft.DotNet.Github.IssueLabeler;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Octokit;
@@ -72,13 +73,15 @@ namespace Microsoft.DotNet.GitHub.IssueLabeler
                 Body = body,
                 IssueOrPr = issueOrPr,
                 IsPR = issueOrPr == GithubObjectType.PullRequest,
-                FilePaths = string.Empty
             };
 
             if (corefxIssue.IsPR)
             {
                 IReadOnlyList<PullRequestFile> prFiles = await _client.PullRequest.Files(_repoOwner, _repoName, number);
-                corefxIssue.FilePaths = String.Join(";", prFiles.Select(x => x.FileName));
+
+                string[] filePaths = prFiles.Select(x => x.FileName).ToArray();
+                var analyzer = new FilePathAnalyzer();
+                analyzer.FillRestFromFilePaths(corefxIssue, filePaths);
             }
 
             string label = Predictor.Predict(corefxIssue, logger, _threshold);
