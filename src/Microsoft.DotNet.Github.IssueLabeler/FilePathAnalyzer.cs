@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace Microsoft.DotNet.Github.IssueLabeler
 {
-    public static class MyExtensions
+    internal static class GitHubIssueExtensions
     {
         public static void Clear(this GitHubIssue gitHubIssue)
         {
